@@ -19,12 +19,16 @@ header[data-testid="stHeader"],footer,#MainMenu,[data-testid="stToolbar"]{displa
 .block-container{max-width:1160px;padding-top:1rem;}
 .stApp [data-testid="stMarkdownContainer"],.stApp [data-testid="stMarkdownContainer"] p,.stApp label,.stApp label *,.stApp [data-testid="stWidgetLabel"] *{color:var(--ink) !important;}
 /* nav pill = tabs */
-[data-baseweb="tab-list"]{justify-content:center;gap:4px;background:#fff;border-radius:999px;padding:8px;width:fit-content;margin:0 auto 22px;box-shadow:0 6px 24px rgba(0,0,0,.08);}
-[data-baseweb="tab-highlight"],[data-baseweb="tab-border"]{display:none !important;}
-button[data-baseweb="tab"]{border-radius:999px;padding:8px 22px;height:auto;background:transparent;}
-button[data-baseweb="tab"] p{font-size:15px;color:#555 !important;}
-button[data-baseweb="tab"][aria-selected="true"]{background:var(--ink) !important;}
-button[data-baseweb="tab"][aria-selected="true"] p{color:#fff !important;}
+.stApp [data-testid="stTabs"] [role="tablist"],.stApp [data-baseweb="tab-list"]{display:flex !important;align-items:center;justify-content:center;gap:6px;width:fit-content !important;max-width:100%;margin:6px auto 26px !important;background:#fff !important;border:0 !important;border-bottom:0 !important;border-radius:999px;padding:9px 9px 9px 26px !important;box-shadow:0 8px 28px rgba(0,0,0,.09);overflow:visible !important;}
+.stApp [data-testid="stTabs"] [role="tablist"]::before,.stApp [data-baseweb="tab-list"]::before{content:"Sensite";font-weight:600;font-size:16px;color:#16161a;margin-right:14px;}
+.stApp [data-testid="stTabs"] [role="tablist"]::after,.stApp [data-baseweb="tab-list"]::after{content:"Hackshastra 2K26";background:#16161a;color:#fff;font-size:15px;padding:12px 24px;border-radius:999px;margin-left:14px;white-space:nowrap;}
+.stApp [data-baseweb="tab-highlight"],.stApp [data-baseweb="tab-border"]{display:none !important;height:0 !important;}
+.stApp [data-testid="stTabs"],.stApp [data-testid="stTabs"]>div{border-bottom:0 !important;box-shadow:none !important;}
+.stApp button[role="tab"]{border-radius:999px;padding:9px 18px;height:auto;background:transparent !important;border:0 !important;}
+.stApp button[role="tab"] p{font-size:15px;color:#555 !important;font-weight:400;}
+.stApp button[role="tab"][aria-selected="true"]{background:#f0f0f3 !important;}
+.stApp button[role="tab"][aria-selected="true"] p{color:#16161a !important;font-weight:600;}
+@media (max-width:700px){.stApp [role="tablist"]::after{display:none;}.stApp [role="tablist"]::before{display:none;}}
 /* widgets forced light */
 [data-baseweb="select"]>div,[data-baseweb="textarea"],[data-baseweb="textarea"] textarea,[data-baseweb="base-input"]{background:#fff !important;color:var(--ink) !important;border-radius:16px !important;border-color:#dcdce0 !important;}
 [data-baseweb="select"] *{color:var(--ink) !important;}
@@ -86,7 +90,6 @@ def head(tag, title):
 def load_demo(n):
     ss.src, ss.demo_pick = "Demo document", n
 
-st.markdown('<div class="brand"><i>●</i> Sensite</div>', unsafe_allow_html=True)
 t_home, t_an, t_red, t_demo = st.tabs(["Home", "Analyze", "Redact", "Demo data"])
 
 # ---------------- HOME ----------------
