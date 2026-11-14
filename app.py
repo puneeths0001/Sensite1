@@ -23,7 +23,10 @@ header[data-testid="stHeader"],footer,#MainMenu,[data-testid="stToolbar"]{displa
 .stApp .st-key-nav [data-testid="stHorizontalBlock"]{flex-wrap:nowrap !important;gap:2px !important;align-items:center !important;overflow:visible !important;}
 .stApp .st-key-nav [data-testid="stColumn"]{min-width:0 !important;width:auto !important;flex:0 0 auto !important;}
 .stApp .st-key-nav [data-testid="stMarkdownContainer"] p{margin:0 !important;}
-.navbrand{font-weight:600;font-size:15px;margin:0 12px 0 0;white-space:nowrap;color:#16161a !important;}
+.navbrand{font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.6px;line-height:1;display:flex;align-items:center;margin:0 12px 0 0;white-space:nowrap;color:#16161a !important;}
+.stApp .st-key-nav [data-testid="stColumn"],.stApp .st-key-nav [data-testid="stColumn"]>[data-testid="stVerticalBlock"]{display:flex !important;flex-direction:column;justify-content:center !important;align-items:center;align-self:center !important;gap:0 !important;}
+.stApp .st-key-nav [data-testid="stElementContainer"],.stApp .st-key-nav [data-testid="stMarkdown"]{margin:0 !important;padding:0 !important;display:flex;align-items:center;}
+.navbadge{display:flex;align-items:center;line-height:1;}
 .navbadge{background:#16161a;border-radius:999px;padding:12px 24px;font-size:15px;white-space:nowrap;margin-left:12px;color:#fff !important;}
 .stApp .st-key-nav [data-testid="stColumn"] .stButton button{background:transparent !important;border:0 !important;box-shadow:none !important;padding:8px 14px;min-height:0;width:auto;}
 .stApp .st-key-nav [data-testid="stColumn"] .stButton button p,.stApp .st-key-nav [data-testid="stColumn"] .stButton button [data-testid="stMarkdownContainer"] p{color:#555 !important;font-size:15px;font-weight:400;white-space:nowrap;}
