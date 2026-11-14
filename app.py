@@ -180,7 +180,7 @@ if ss.page == "Analyze":
     st.radio("Source", ["Demo document", "Paste text", "Upload file"], horizontal=True, key="src")
     name, text = "", ""
     if ss.src == "Demo document":
-        st.selectbox("Choose a demo document", list(DEMO_DOCS), key="demo_pick")
+        st.radio("Choose a demo document", list(DEMO_DOCS), key="demo_pick", horizontal=True)
         name, text = ss.demo_pick, DEMO_DOCS[ss.demo_pick]
     elif ss.src == "Paste text":
         name = "Pasted text"
@@ -230,7 +230,9 @@ if ss.page == "Redact":
         st.markdown('<div class="card muted">Nothing to redact yet. Analyze a document with sensitive data first (try a demo document).</div>', unsafe_allow_html=True)
     else:
         types = sorted({f.type for f in found})
-        chosen = st.multiselect("Data types to protect", types, default=types)
+        st.markdown("**Data types to protect**")
+        ck = st.columns(min(len(types), 4))
+        chosen = [t for i, t in enumerate(types) if ck[i % len(ck)].checkbox(t, value=True, key="chk_" + t)]
         style = st.radio("Protection style", ["Partial mask (keep last 4)", "Label, e.g. [AADHAAR NUMBER]", "Black bars"], horizontal=True)
         mode = {"P": "mask", "L": "label", "B": "block"}[style[0]]
         sel = [f for f in found if f.type in chosen]
