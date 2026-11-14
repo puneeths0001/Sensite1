@@ -231,7 +231,8 @@ if ss.page == "Analyze":
             st.markdown(f'<table class="t"><tr><th>Type</th><th>Category</th><th>Detected</th><th>Masked as</th></tr>{rows}</table>', unsafe_allow_html=True)
             st.caption("Open the Redact tab to protect this document.")
         else:
-            st.success("No sensitive information detected. This document looks safe to share.")
+            st.write("")
+            st.markdown('<div style="background:#dcf3e4;border-radius:22px;padding:18px 24px;font-size:16px;color:#17703a;font-weight:500;">No sensitive information detected. This document looks safe to share.</div>', unsafe_allow_html=True)
 
 # ---------------- REDACT ----------------
 if ss.page == "Redact":
