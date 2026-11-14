@@ -19,20 +19,20 @@ header[data-testid="stHeader"],footer,#MainMenu,[data-testid="stToolbar"]{displa
 .block-container{max-width:1160px;padding-top:1rem;}
 .stApp [data-testid="stMarkdownContainer"],.stApp [data-testid="stMarkdownContainer"] p,.stApp label,.stApp label *,.stApp [data-testid="stWidgetLabel"] *{color:var(--ink) !important;}
 /* nav pill */
-.st-key-nav{max-width:780px;margin:6px auto 26px;background:#fff;border-radius:999px;padding:8px 10px 8px 28px;box-shadow:0 8px 28px rgba(0,0,0,.09);}
-.st-key-nav [data-testid="stHorizontalBlock"]{flex-wrap:nowrap !important;gap:6px !important;align-items:center;overflow-x:auto;}
-.st-key-nav [data-testid="stColumn"]{min-width:0 !important;width:auto !important;flex:1 1 auto !important;}
-.st-key-nav [data-testid="stColumn"]:first-child{flex:0 0 auto !important;}
-.st-key-nav [data-testid="stColumn"]:last-child{flex:0 0 auto !important;}
-.navbrand{font-weight:600;font-size:16px;margin-right:10px;white-space:nowrap;}
-.navbadge{background:#16161a;border-radius:999px;padding:12px 24px;font-size:15px;white-space:nowrap;margin-left:8px;}
-.navbadge,.stApp .navbadge{color:#fff !important;}
-.stApp .st-key-nav .stButton button{background:transparent !important;border:0 !important;box-shadow:none !important;padding:8px 16px;min-height:0;width:100%;}
-.stApp .st-key-nav .stButton button p{color:#555 !important;font-size:15px;font-weight:400;white-space:nowrap;}
-.stApp .st-key-nav .stButton button:hover{background:#f0f0f3 !important;}
-.stApp .st-key-nav .stButton button[kind="primary"],.stApp .st-key-nav .stButton button[data-testid="stBaseButton-primary"]{background:#f0f0f3 !important;}
-.stApp .st-key-nav .stButton button[kind="primary"] p,.stApp .st-key-nav .stButton button[data-testid="stBaseButton-primary"] p{color:#16161a !important;font-weight:600;}
-@media (max-width:700px){.navbadge{display:none}.st-key-nav{padding:8px 10px;border-radius:28px}.stApp .st-key-nav .stButton button{padding:6px 8px}.stApp .st-key-nav .stButton button p{font-size:13px}}
+.stApp .st-key-nav{max-width:780px;margin:6px auto 26px;background:#fff;border-radius:999px;padding:8px 10px 8px 26px;box-shadow:0 8px 28px rgba(0,0,0,.09);overflow:visible;}
+.stApp .st-key-nav [data-testid="stHorizontalBlock"]{flex-wrap:nowrap !important;gap:4px !important;align-items:center !important;overflow:visible !important;}
+.stApp .st-key-nav [data-testid="stColumn"]{min-width:0 !important;width:auto !important;flex:1 1 0 !important;}
+.stApp .st-key-nav [data-testid="stColumn"]:first-child,.stApp .st-key-nav [data-testid="stColumn"]:last-child{flex:0 0 auto !important;}
+.stApp .st-key-nav [data-testid="stMarkdownContainer"] p{margin:0 !important;}
+.navbrand{font-weight:600;font-size:16px;margin:0 14px 0 0;white-space:nowrap;color:#16161a !important;}
+.navbadge{background:#16161a;border-radius:999px;padding:12px 22px;font-size:15px;white-space:nowrap;margin-left:6px;color:#fff !important;}
+.stApp .st-key-nav [data-testid="stColumn"] .stButton button{background:transparent !important;border:0 !important;box-shadow:none !important;padding:8px 10px;min-height:0;width:100%;}
+.stApp .st-key-nav [data-testid="stColumn"] .stButton button p,.stApp .st-key-nav [data-testid="stColumn"] .stButton button [data-testid="stMarkdownContainer"] p{color:#555 !important;font-size:15px;font-weight:400;white-space:nowrap;}
+.stApp .st-key-nav [data-testid="stColumn"] .stButton button:hover{background:#f0f0f3 !important;}
+.stApp .st-key-nav [data-testid="stColumn"] .stButton button:hover p{color:#16161a !important;}
+.stApp .st-key-nav [data-testid="stColumn"] .stButton button[kind="primary"],.stApp .st-key-nav [data-testid="stColumn"] .stButton button[data-testid="stBaseButton-primary"]{background:#f0f0f3 !important;}
+.stApp .st-key-nav [data-testid="stColumn"] .stButton button[kind="primary"] p,.stApp .st-key-nav [data-testid="stColumn"] .stButton button[data-testid="stBaseButton-primary"] p,.stApp .st-key-nav [data-testid="stColumn"] .stButton button[kind="primary"] [data-testid="stMarkdownContainer"] p{color:#16161a !important;font-weight:600;}
+@media (max-width:700px){.navbadge{display:none}.stApp .st-key-nav{padding:8px 10px;border-radius:28px}.stApp .st-key-nav [data-testid="stColumn"] .stButton button{padding:6px 6px}.stApp .st-key-nav [data-testid="stColumn"] .stButton button p{font-size:13px}}
 /* widgets forced light */
 [data-baseweb="select"]>div,[data-baseweb="textarea"],[data-baseweb="textarea"] textarea,[data-baseweb="base-input"]{background:#fff !important;color:var(--ink) !important;border-radius:16px !important;border-color:#dcdce0 !important;}
 [data-baseweb="select"] *{color:var(--ink) !important;}
