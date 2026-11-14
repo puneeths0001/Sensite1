@@ -82,6 +82,26 @@ table.t th{text-align:left;color:#7d7d86;font-weight:400;padding:14px 18px;backg
 .hm .big{display:inline-block;transition:transform .35s cubic-bezier(.2,.7,.2,1);transform-origin:left bottom;} .hm:hover .big{transform:scale(1.08);}
 .hm .chip{transition:background .25s,color .25s,transform .25s;} .hm .chip:hover{background:#ff4a1c !important;color:#fff !important;transform:translateY(-2px);}
 @media (prefers-reduced-motion:reduce){.hero,.hm{animation:none !important;transition:none !important;}}
+.hero{padding-bottom:56px;}
+.scene{perspective:1200px;height:270px;margin-top:38px;display:flex;align-items:center;justify-content:center;}
+.doc3d{position:relative;width:320px;height:210px;transform-style:preserve-3d;animation:sway 8s ease-in-out infinite alternate;}
+@keyframes sway{from{transform:rotateX(16deg) rotateY(-32deg)}to{transform:rotateX(9deg) rotateY(32deg)}}
+.doc3d .layer{position:absolute;inset:0;border-radius:22px;}
+.doc3d .l0{background:linear-gradient(135deg,#ff4a1c,#ff9a7a);transform:translateZ(-60px) translate(20px,20px);box-shadow:0 30px 60px rgba(255,74,28,.35);}
+.doc3d .l1{background:#fff;padding:22px 24px;text-align:left;box-shadow:0 20px 50px rgba(0,0,0,.18);}
+.doc3d .l1 b{display:block;font-size:13px;font-weight:500;color:#7d7d86;margin-bottom:16px;}
+.doc3d .ln{display:block;height:11px;border-radius:6px;background:#e6e6ea;margin-bottom:13px;}
+.w40{width:40%}.w50{width:50%}.w60{width:60%}.w70{width:70%}.w80{width:80%}.w90{width:90%}
+.doc3d .hit{animation:redact 4.5s ease-in-out infinite;}
+.doc3d .h2{animation-delay:.6s}.doc3d .h3{animation-delay:1.2s}
+@keyframes redact{0%,20%{background:#e6e6ea}30%,40%{background:#ffb8a3}55%,85%{background:#16161a}100%{background:#e6e6ea}}
+.doc3d .l2{inset:auto;right:-30px;bottom:-30px;width:92px;height:92px;border-radius:26px;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;transform:translateZ(80px);box-shadow:0 16px 36px rgba(0,0,0,.18);}
+.doc3d .fl{position:absolute;background:#fff;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:500;color:#16161a;box-shadow:0 10px 24px rgba(0,0,0,.14);animation:bob 3.2s ease-in-out infinite alternate;}
+.f1{left:-46px;top:20px;transform:translateZ(90px)}.f2{right:-40px;top:-14px;transform:translateZ(110px);animation-delay:.5s !important}
+.f3{left:-30px;bottom:6px;transform:translateZ(100px);animation-delay:1s !important}.f4{right:70px;bottom:-34px;transform:translateZ(70px);animation-delay:1.5s !important}
+@keyframes bob{from{margin-top:-6px}to{margin-top:8px}}
+@media (max-width:700px){.scene{transform:scale(.68);height:210px;margin-top:18px}}
+@media (prefers-reduced-motion:reduce){.doc3d,.doc3d .hit,.doc3d .fl{animation:none !important;}.doc3d{transform:rotateX(12deg) rotateY(-20deg);}}
 </style>
 """
 st.markdown(CSS, unsafe_allow_html=True)
@@ -120,7 +140,13 @@ with st.container(key="nav"):
 if ss.page == "Home":
     st.markdown("""<div class="hero"><div class="pill">Sensitive information detection</div>
     <h1>Spot sensitive data.<br>Protect it before sharing.</h1>
-    <p>Sensite reads your document, highlights Aadhaar, PAN, phone, email, bank and card details, then masks or redacts them in one click.</p></div>""", unsafe_allow_html=True)
+    <p>Sensite reads your document, highlights Aadhaar, PAN, phone, email, bank and card details, then masks or redacts them in one click.</p>
+<div class="scene"><div class="doc3d">
+<div class="layer l0"></div>
+<div class="layer l1"><b>customer_record.pdf</b><i class="ln w80"></i><i class="ln w60 hit"></i><i class="ln w90"></i><i class="ln w50 hit h2"></i><i class="ln w70 hit h3"></i><i class="ln w40"></i></div>
+<div class="layer l2"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#ff4a1c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div>
+<span class="fl f1">Aadhaar</span><span class="fl f2">PAN</span><span class="fl f3">Card no.</span><span class="fl f4">Email</span>
+</div></div></div>""", unsafe_allow_html=True)
     head("How it works", "Three steps, no setup")
     a, b, c = st.columns(3)
     a.markdown('<div class="dark hm" style="--d:0.00s"><div class="big">1</div><h4>Analyze</h4><div class="muted">Paste text, upload a file, or pick a demo document. Sensitive items are found and highlighted instantly.</div></div>', unsafe_allow_html=True)
