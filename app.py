@@ -19,14 +19,13 @@ header[data-testid="stHeader"],footer,#MainMenu,[data-testid="stToolbar"]{displa
 .block-container{max-width:1160px;padding-top:1rem;}
 .stApp [data-testid="stMarkdownContainer"],.stApp [data-testid="stMarkdownContainer"] p,.stApp label,.stApp label *,.stApp [data-testid="stWidgetLabel"] *{color:var(--ink) !important;}
 /* nav pill */
-.stApp .st-key-nav{max-width:780px;margin:6px auto 26px;background:#fff;border-radius:999px;padding:8px 10px 8px 26px;box-shadow:0 8px 28px rgba(0,0,0,.09);overflow:visible;}
-.stApp .st-key-nav [data-testid="stHorizontalBlock"]{flex-wrap:nowrap !important;gap:4px !important;align-items:center !important;overflow:visible !important;}
-.stApp .st-key-nav [data-testid="stColumn"]{min-width:0 !important;width:auto !important;flex:1 1 0 !important;}
-.stApp .st-key-nav [data-testid="stColumn"]:first-child,.stApp .st-key-nav [data-testid="stColumn"]:last-child{flex:0 0 auto !important;}
+.stApp .st-key-nav{width:fit-content !important;max-width:100%;margin:6px auto 26px !important;background:#fff;border-radius:999px;padding:8px 8px 8px 24px;box-shadow:0 8px 28px rgba(0,0,0,.09);overflow:visible;}
+.stApp .st-key-nav [data-testid="stHorizontalBlock"]{flex-wrap:nowrap !important;gap:2px !important;align-items:center !important;overflow:visible !important;}
+.stApp .st-key-nav [data-testid="stColumn"]{min-width:0 !important;width:auto !important;flex:0 0 auto !important;}
 .stApp .st-key-nav [data-testid="stMarkdownContainer"] p{margin:0 !important;}
-.navbrand{font-weight:600;font-size:16px;margin:0 14px 0 0;white-space:nowrap;color:#16161a !important;}
-.navbadge{background:#16161a;border-radius:999px;padding:12px 22px;font-size:15px;white-space:nowrap;margin-left:6px;color:#fff !important;}
-.stApp .st-key-nav [data-testid="stColumn"] .stButton button{background:transparent !important;border:0 !important;box-shadow:none !important;padding:8px 10px;min-height:0;width:100%;}
+.navbrand{font-weight:600;font-size:15px;margin:0 12px 0 0;white-space:nowrap;color:#16161a !important;}
+.navbadge{background:#16161a;border-radius:999px;padding:12px 24px;font-size:15px;white-space:nowrap;margin-left:12px;color:#fff !important;}
+.stApp .st-key-nav [data-testid="stColumn"] .stButton button{background:transparent !important;border:0 !important;box-shadow:none !important;padding:8px 14px;min-height:0;width:auto;}
 .stApp .st-key-nav [data-testid="stColumn"] .stButton button p,.stApp .st-key-nav [data-testid="stColumn"] .stButton button [data-testid="stMarkdownContainer"] p{color:#555 !important;font-size:15px;font-weight:400;white-space:nowrap;}
 .stApp .st-key-nav [data-testid="stColumn"] .stButton button:hover{background:#f0f0f3 !important;}
 .stApp .st-key-nav [data-testid="stColumn"] .stButton button:hover p{color:#16161a !important;}
