@@ -75,6 +75,13 @@ table.t th{text-align:left;color:#7d7d86;font-weight:400;padding:14px 18px;backg
 .bar{height:10px;border-radius:99px;background:#ff4a1c;margin:4px 0 12px;}
 .foot{text-align:center;color:#7d7d86 !important;font-size:13px;margin:46px 0 10px;}
 @media (max-width:700px){.hero h1{font-size:36px}.big{font-size:52px}}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.hero{animation:rise .8s cubic-bezier(.2,.7,.2,1) backwards;}
+.hm{animation:rise .7s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:var(--d,0s);transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s ease;}
+.hm:hover{transform:translateY(-8px);box-shadow:0 24px 48px rgba(0,0,0,.15);}
+.hm .big{display:inline-block;transition:transform .35s cubic-bezier(.2,.7,.2,1);transform-origin:left bottom;} .hm:hover .big{transform:scale(1.08);}
+.hm .chip{transition:background .25s,color .25s,transform .25s;} .hm .chip:hover{background:#ff4a1c !important;color:#fff !important;transform:translateY(-2px);}
+@media (prefers-reduced-motion:reduce){.hero,.hm{animation:none !important;transition:none !important;}}
 </style>
 """
 st.markdown(CSS, unsafe_allow_html=True)
@@ -116,17 +123,17 @@ if ss.page == "Home":
     <p>Sensite reads your document, highlights Aadhaar, PAN, phone, email, bank and card details, then masks or redacts them in one click.</p></div>""", unsafe_allow_html=True)
     head("How it works", "Three steps, no setup")
     a, b, c = st.columns(3)
-    a.markdown('<div class="dark"><div class="big">1</div><h4>Analyze</h4><div class="muted">Paste text, upload a file, or pick a demo document. Sensitive items are found and highlighted instantly.</div></div>', unsafe_allow_html=True)
-    b.markdown('<div class="card"><div class="big">2</div><h4>Choose protection</h4><div class="muted">Pick which data types to protect and a style: partial mask, label or black bar.</div></div>', unsafe_allow_html=True)
-    c.markdown('<div class="card"><div class="big">3</div><h4>Share safely</h4><div class="muted">Download the protected copy. Nothing is stored; everything stays in your session.</div></div>', unsafe_allow_html=True)
+    a.markdown('<div class="dark hm" style="--d:0.00s"><div class="big">1</div><h4>Analyze</h4><div class="muted">Paste text, upload a file, or pick a demo document. Sensitive items are found and highlighted instantly.</div></div>', unsafe_allow_html=True)
+    b.markdown('<div class="card hm" style="--d:0.12s"><div class="big">2</div><h4>Choose protection</h4><div class="muted">Pick which data types to protect and a style: partial mask, label or black bar.</div></div>', unsafe_allow_html=True)
+    c.markdown('<div class="card hm" style="--d:0.24s"><div class="big">3</div><h4>Share safely</h4><div class="muted">Download the protected copy. Nothing is stored; everything stays in your session.</div></div>', unsafe_allow_html=True)
     head("What it detects", "Every common identifier")
     g1, g2 = st.columns(2)
-    g1.markdown('<div class="dark"><h4>Personal identifiers</h4><span class="chip">Aadhaar</span><span class="chip">PAN</span><span class="chip">Passport</span><span class="chip">Date of birth</span></div>', unsafe_allow_html=True)
-    g2.markdown('<div class="card"><h4>Contact details</h4><span class="chip">Phone number</span><span class="chip">Email</span></div>', unsafe_allow_html=True)
+    g1.markdown('<div class="dark hm" style="--d:0.36s"><h4>Personal identifiers</h4><span class="chip">Aadhaar</span><span class="chip">PAN</span><span class="chip">Passport</span><span class="chip">Date of birth</span></div>', unsafe_allow_html=True)
+    g2.markdown('<div class="card hm" style="--d:0.48s"><h4>Contact details</h4><span class="chip">Phone number</span><span class="chip">Email</span></div>', unsafe_allow_html=True)
     st.write("")
     g3, g4 = st.columns(2)
-    g3.markdown('<div class="card"><h4>Financial data</h4><span class="chip">Credit/debit card</span><span class="chip">Bank account</span><span class="chip">IFSC</span><span class="chip">UPI ID</span></div>', unsafe_allow_html=True)
-    g4.markdown('<div class="card"><h4>Credentials and network</h4><span class="chip">Passwords</span><span class="chip">API keys</span><span class="chip">IP address</span></div>', unsafe_allow_html=True)
+    g3.markdown('<div class="card hm" style="--d:0.60s"><h4>Financial data</h4><span class="chip">Credit/debit card</span><span class="chip">Bank account</span><span class="chip">IFSC</span><span class="chip">UPI ID</span></div>', unsafe_allow_html=True)
+    g4.markdown('<div class="card hm" style="--d:0.72s"><h4>Credentials and network</h4><span class="chip">Passwords</span><span class="chip">API keys</span><span class="chip">IP address</span></div>', unsafe_allow_html=True)
     head("FAQ", "Common questions")
     with st.expander("Are my documents stored?"):
         st.write("No. Text is processed in memory for your current session only.")
