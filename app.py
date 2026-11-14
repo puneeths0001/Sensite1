@@ -28,7 +28,12 @@ header[data-testid="stHeader"],footer,#MainMenu,[data-testid="stToolbar"]{displa
 .stApp button[role="tab"] p{font-size:15px;color:#555 !important;font-weight:400;}
 .stApp button[role="tab"][aria-selected="true"]{background:#f0f0f3 !important;}
 .stApp button[role="tab"][aria-selected="true"] p{color:#16161a !important;font-weight:600;}
-@media (max-width:700px){.stApp [role="tablist"]::after{display:none;}.stApp [role="tablist"]::before{display:none;}}
+.stApp [data-testid="stTabs"] [role="tablist"]{flex-wrap:nowrap !important;}
+.stApp [data-testid="stTabs"] [role="tablist"]>*:not(button){display:none !important;}
+.stApp button[role="tab"],.stApp button[role="tab"][aria-selected="true"]{box-shadow:none !important;border-bottom:0 !important;white-space:nowrap;}
+@media (max-width:820px){.stApp [data-testid="stTabs"] [role="tablist"]::before,.stApp [data-testid="stTabs"] [role="tablist"]::after{display:none !important;content:none !important;}
+.stApp [data-testid="stTabs"] [role="tablist"]{padding:8px !important;overflow-x:auto !important;justify-content:flex-start !important;}
+.stApp button[role="tab"]{padding:8px 12px;} .stApp button[role="tab"] p{font-size:14px;}}
 /* widgets forced light */
 [data-baseweb="select"]>div,[data-baseweb="textarea"],[data-baseweb="textarea"] textarea,[data-baseweb="base-input"]{background:#fff !important;color:var(--ink) !important;border-radius:16px !important;border-color:#dcdce0 !important;}
 [data-baseweb="select"] *{color:var(--ink) !important;}
