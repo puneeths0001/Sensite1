@@ -13,6 +13,7 @@ CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
 :root{--ink:#16161a;--acc:#ff4a1c;}
 html,body,.stApp,.stApp *{font-family:'Outfit',sans-serif;}
+.stApp [data-testid="stIconMaterial"],.stApp span[class*="material"],.stApp [data-testid="stExpander"] summary [data-testid="stIconMaterial"]{font-family:'Material Symbols Rounded','Material Symbols Outlined' !important;font-weight:400 !important;}
 .stApp,[data-testid="stAppViewContainer"],[data-testid="stMain"]{background:#ececec !important;color:var(--ink) !important;}
 header[data-testid="stHeader"],footer,#MainMenu,[data-testid="stToolbar"]{display:none !important;}
 .block-container{max-width:1160px;padding-top:1rem;}
