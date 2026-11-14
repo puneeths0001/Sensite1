@@ -1,148 +1,198 @@
-import html, io
-import pandas as pd
+import html
 import streamlit as st
-from detector import scan, risk, redact, add_block, verify_chain
+from detector import scan, redact, mask_value
 from demo_data import DEMO_DOCS
 
 st.set_page_config(page_title="Sensite | Sensitive Data Detection", page_icon="🛡️", layout="wide")
+ss = st.session_state
+ss.setdefault("src", "Demo document")
+ss.setdefault("demo_pick", list(DEMO_DOCS)[0])
 
 CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
-html, body, [class*="css"], .stApp {font-family:'Outfit',sans-serif !important;}
-header[data-testid="stHeader"], footer, #MainMenu {display:none;}
-.block-container {max-width:1180px; padding-top:1.2rem;}
-.hero {position:relative; overflow:hidden; border-radius:34px; padding:26px 30px 70px; text-align:center;
-  background: radial-gradient(70% 90% at 92% 20%, #ff4a1c 0%, rgba(255,74,28,0) 55%),
-              radial-gradient(60% 80% at 8% 90%, #d9d9de 0%, rgba(217,217,222,0) 60%),
-              linear-gradient(135deg,#f6f6f8,#e4e4e8);}
-.nav {display:inline-flex; gap:26px; align-items:center; background:#fff; border-radius:999px; padding:10px 14px 10px 22px;
-  box-shadow:0 6px 24px rgba(0,0,0,.08); font-size:14px; margin-bottom:56px;}
-.nav b {font-weight:600; margin-right:10px;} .nav span {color:#555;}
-.nav .btn {background:#16161a; color:#fff; padding:9px 18px; border-radius:999px;}
-.pill {display:inline-block; font-size:12px; color:#ff4a1c; background:#fff; border:1px solid #ffd2c6; border-radius:8px; padding:4px 10px; margin-bottom:18px;}
-.hero h1 {font-size:56px; font-weight:400; line-height:1.08; margin:0 0 16px; color:#16161a; letter-spacing:-1px;}
-.hero p {color:#555; font-size:16px; max-width:520px; margin:0 auto 26px;}
-.hero .b1 {background:#16161a; color:#fff; padding:12px 24px; border-radius:999px; margin-right:8px; display:inline-block;}
-.hero .b2 {background:#fff; color:#16161a; padding:12px 24px; border-radius:999px; display:inline-block; box-shadow:0 4px 14px rgba(0,0,0,.08);}
-.tag {display:inline-block; font-size:12px; color:#ff4a1c; background:#fff; border:1px solid #ffd2c6; border-radius:8px; padding:3px 10px; margin:36px 0 8px;}
-h2.sec {font-size:40px; font-weight:400; letter-spacing:-.8px; margin:0 0 18px; color:#16161a;}
-.card {background:#fff; border-radius:28px; padding:26px; box-shadow:0 8px 28px rgba(0,0,0,.06);}
-.dark {background:linear-gradient(160deg,#26262b,#101013); color:#fff; border-radius:28px; padding:26px;}
-.big {font-size:84px; font-weight:300; line-height:1; letter-spacing:-3px;}
-.lvl {font-size:22px; font-weight:500;}
-.muted {color:#8a8a92; font-size:14px;}
-.stat {font-size:44px; font-weight:300; letter-spacing:-1.5px; color:#16161a;}
-.docview {background:#fff; border-radius:28px; padding:22px 26px; white-space:pre-wrap; font-size:15px; line-height:1.8; box-shadow:0 8px 28px rgba(0,0,0,.06);}
-mark {background:#ffe1d8; color:#c2300c; border-radius:6px; padding:1px 6px; font-weight:500;}
-mark small {font-size:10px; margin-left:5px; opacity:.75; font-weight:400;}
-.block {background:#1d1d22; border-radius:16px; padding:12px 16px; margin-bottom:10px; font-size:13px; color:#cfcfd6;}
-.block code {color:#ff7a57; background:transparent;}
-.foot {text-align:center; color:#8a8a92; font-size:13px; margin:44px 0 10px;}
-.stButton>button, .stDownloadButton>button {border-radius:999px; background:#16161a; color:#fff; border:0; padding:.55rem 1.4rem;}
-.stButton>button:hover, .stDownloadButton>button:hover {background:#ff4a1c; color:#fff;}
-@media (max-width:700px){.hero h1{font-size:36px}.nav span{display:none}.big{font-size:60px}}
+:root{--ink:#16161a;--acc:#ff4a1c;}
+html,body,.stApp,.stApp *{font-family:'Outfit',sans-serif;}
+.stApp,[data-testid="stAppViewContainer"],[data-testid="stMain"]{background:#ececec !important;color:var(--ink) !important;}
+header[data-testid="stHeader"],footer,#MainMenu,[data-testid="stToolbar"]{display:none !important;}
+.block-container{max-width:1160px;padding-top:1rem;}
+.stApp [data-testid="stMarkdownContainer"],.stApp [data-testid="stMarkdownContainer"] p,.stApp label,.stApp label *,.stApp [data-testid="stWidgetLabel"] *{color:var(--ink) !important;}
+/* nav pill = tabs */
+[data-baseweb="tab-list"]{justify-content:center;gap:4px;background:#fff;border-radius:999px;padding:8px;width:fit-content;margin:0 auto 22px;box-shadow:0 6px 24px rgba(0,0,0,.08);}
+[data-baseweb="tab-highlight"],[data-baseweb="tab-border"]{display:none !important;}
+button[data-baseweb="tab"]{border-radius:999px;padding:8px 22px;height:auto;background:transparent;}
+button[data-baseweb="tab"] p{font-size:15px;color:#555 !important;}
+button[data-baseweb="tab"][aria-selected="true"]{background:var(--ink) !important;}
+button[data-baseweb="tab"][aria-selected="true"] p{color:#fff !important;}
+/* widgets forced light */
+[data-baseweb="select"]>div,[data-baseweb="textarea"],[data-baseweb="textarea"] textarea,[data-baseweb="base-input"]{background:#fff !important;color:var(--ink) !important;border-radius:16px !important;border-color:#dcdce0 !important;}
+[data-baseweb="select"] *{color:var(--ink) !important;}
+[data-baseweb="popover"] *,[data-baseweb="menu"],[role="listbox"]{background:#fff !important;color:var(--ink) !important;}
+[data-testid="stFileUploaderDropzone"]{background:#fff !important;border-radius:20px;border:1px dashed #c9c9cf;}
+[data-testid="stFileUploaderDropzone"] *{color:var(--ink) !important;}
+[data-baseweb="tag"]{background:#ffe1d8 !important;border-radius:999px !important;} [data-baseweb="tag"] *{color:#c2300c !important;background:transparent !important;}
+[data-testid="stExpander"]{background:#fff;border:0 !important;border-radius:22px;box-shadow:0 6px 20px rgba(0,0,0,.05);margin-bottom:10px;}
+[data-testid="stExpander"] *{color:var(--ink) !important;background:transparent;}
+.stButton>button,.stDownloadButton>button{border-radius:999px;background:var(--ink) !important;border:0;padding:.6rem 1.5rem;}
+.stButton>button *,.stDownloadButton>button *{color:#fff !important;}
+.stButton>button:hover,.stDownloadButton>button:hover{background:var(--acc) !important;}
+/* components */
+.brand{text-align:center;font-weight:600;font-size:20px;margin:4px 0 10px;} .brand i{color:var(--acc);font-style:normal;}
+.hero{border-radius:34px;padding:80px 30px 90px;text-align:center;
+ background:radial-gradient(60% 90% at 95% 15%,#ff4a1c 0%,rgba(255,74,28,0) 58%),radial-gradient(60% 80% at 5% 95%,#d4d4da 0%,rgba(212,212,218,0) 60%),linear-gradient(135deg,#f7f7f9,#e3e3e8);}
+.pill,.tag{display:inline-block;font-size:12px;color:var(--acc) !important;background:#fff;border:1px solid #ffd2c6;border-radius:8px;padding:4px 10px;}
+.tag{margin:34px 0 8px;} .hero .pill{margin-bottom:20px;}
+.hero h1{font-size:58px;font-weight:400;line-height:1.08;letter-spacing:-1.5px;margin:0 0 16px;}
+.hero p{color:#555 !important;font-size:17px;max-width:560px;margin:0 auto;}
+h2.sec{font-size:40px;font-weight:400;letter-spacing:-.8px;margin:0 0 18px;line-height:1.15;}
+.card{background:#fff;border-radius:28px;padding:26px;box-shadow:0 8px 28px rgba(0,0,0,.06);height:100%;}
+.card h4{margin:0 0 10px;font-size:20px;font-weight:500;}
+.dark{background:linear-gradient(160deg,#2a2a2f,#0f0f12);border-radius:28px;padding:30px;height:100%;}
+.dark,.dark *{color:#fff !important;} .dark .muted{color:#a9a9b3 !important;}
+.muted{color:#7d7d86 !important;font-size:14px;}
+.big{font-size:70px;font-weight:300;letter-spacing:-2.5px;line-height:1;}
+.chip{display:inline-block;font-size:13px;background:#f0f0f3;border-radius:999px;padding:5px 12px;margin:3px 3px 0 0;}
+.dark .chip{background:rgba(255,255,255,.12);}
+.docview{background:#fff;border-radius:28px;padding:22px 26px;white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.9;box-shadow:0 8px 28px rgba(0,0,0,.06);}
+.docview mark{border-radius:7px;padding:1px 7px;font-weight:500;}
+.docview mark small{font-size:10px;margin-left:5px;opacity:.7;font-weight:400;}
+table.t{width:100%;border-collapse:collapse;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.06);font-size:14px;}
+table.t th{text-align:left;color:#7d7d86;font-weight:400;padding:14px 18px;background:#f7f7f9;} table.t td{padding:12px 18px;border-top:1px solid #efeff2;}
+.bar{height:10px;border-radius:99px;background:#ff4a1c;margin:4px 0 12px;}
+.foot{text-align:center;color:#7d7d86 !important;font-size:13px;margin:46px 0 10px;}
+@media (max-width:700px){.hero h1{font-size:36px}.big{font-size:52px}}
 </style>
 """
 st.markdown(CSS, unsafe_allow_html=True)
 
-st.markdown("""
-<div class="hero">
-  <div class="nav"><b>Sensite</b><span>Scan</span><span>Results</span><span>Ledger</span><div class="btn">CB-02</div></div><br>
-  <div class="pill">Intelligent Data Loss Prevention</div>
-  <h1>Find sensitive data<br>before it leaks.</h1>
-  <p>Upload a document and Sensite detects personal, financial and credential data, scores the risk, redacts it, and logs every scan on a tamper-evident ledger.</p>
-  <span class="b1">Scan a document</span><span class="b2">Try demo data</span>
-</div>""", unsafe_allow_html=True)
+COL = {"Government ID": ("#ffe1d8", "#b92b08"), "Contact": ("#dfe9ff", "#2447b5"), "Financial": ("#d9f2e2", "#17703a"),
+       "Credentials": ("#16161a", "#ffffff"), "Personal": ("#f1e1ff", "#7a2fb0"), "Network": ("#e6e6ea", "#444444")}
 
-# ---------- Input ----------
-st.markdown('<div class="tag">Scan</div><h2 class="sec">Choose a document</h2>', unsafe_allow_html=True)
-src = st.radio("Source", ["Demo document", "Paste text", "Upload file"], horizontal=True, label_visibility="collapsed")
+def highlight(text, findings):
+    out, last = [], 0
+    for f in findings:
+        bg, fg = COL[f.category]
+        out += [html.escape(text[last:f.start]),
+                f'<mark style="background:{bg};color:{fg}">{html.escape(f.value)}<small>{f.type}</small></mark>']
+        last = f.end
+    out.append(html.escape(text[last:]))
+    return '<div class="docview">' + "".join(out) + "</div>"
 
-def read_upload(f) -> str:
-    name = f.name.lower()
-    if name.endswith(".pdf"):
-        from pypdf import PdfReader
-        return "\n".join(p.extract_text() or "" for p in PdfReader(f).pages)
-    if name.endswith(".docx"):
-        from docx import Document
-        return "\n".join(p.text for p in Document(f).paragraphs)
-    return f.read().decode("utf-8", errors="ignore")
+def head(tag, title):
+    st.markdown(f'<div class="tag">{tag}</div><h2 class="sec">{title}</h2>', unsafe_allow_html=True)
 
-doc_name, text = "", ""
-if src == "Demo document":
-    doc_name = st.selectbox("Pick a demo", list(DEMO_DOCS))
-    text = DEMO_DOCS[doc_name]
-elif src == "Paste text":
-    doc_name = "Pasted text"
-    text = st.text_area("Paste text", height=200, placeholder="Paste any text containing emails, phone numbers, card numbers...")
-else:
-    up = st.file_uploader("Upload a .txt, .csv, .pdf or .docx file", type=["txt", "csv", "md", "pdf", "docx"])
-    if up:
-        doc_name, text = up.name, read_upload(up)
+def load_demo(n):
+    ss.src, ss.demo_pick = "Demo document", n
 
-mode_label = st.radio("Redaction style", ["Partial mask (keep last 4)", "Full label"], horizontal=True)
-mode = "mask" if mode_label.startswith("Partial") else "label"
+st.markdown('<div class="brand"><i>●</i> Sensite</div>', unsafe_allow_html=True)
+t_home, t_an, t_red, t_demo = st.tabs(["Home", "Analyze", "Redact", "Demo data"])
 
-if "chain" not in st.session_state:
-    st.session_state.chain, st.session_state.last = [], None
+# ---------------- HOME ----------------
+with t_home:
+    st.markdown("""<div class="hero"><div class="pill">Sensitive information detection</div>
+    <h1>Spot sensitive data.<br>Protect it before sharing.</h1>
+    <p>Sensite reads your document, highlights Aadhaar, PAN, phone, email, bank and card details, then masks or redacts them in one click.</p></div>""", unsafe_allow_html=True)
+    head("How it works", "Three steps, no setup")
+    a, b, c = st.columns(3)
+    a.markdown('<div class="dark"><div class="big">1</div><h4>Analyze</h4><div class="muted">Paste text, upload a file, or pick a demo document. Sensitive items are found and highlighted instantly.</div></div>', unsafe_allow_html=True)
+    b.markdown('<div class="card"><div class="big">2</div><h4>Choose protection</h4><div class="muted">Pick which data types to protect and a style: partial mask, label or black bar.</div></div>', unsafe_allow_html=True)
+    c.markdown('<div class="card"><div class="big">3</div><h4>Share safely</h4><div class="muted">Download the protected copy. Nothing is stored; everything stays in your session.</div></div>', unsafe_allow_html=True)
+    head("What it detects", "Every common identifier")
+    g1, g2 = st.columns(2)
+    g1.markdown('<div class="dark"><h4>Personal identifiers</h4><span class="chip">Aadhaar</span><span class="chip">PAN</span><span class="chip">Passport</span><span class="chip">Date of birth</span></div>', unsafe_allow_html=True)
+    g2.markdown('<div class="card"><h4>Contact details</h4><span class="chip">Phone number</span><span class="chip">Email</span></div>', unsafe_allow_html=True)
+    st.write("")
+    g3, g4 = st.columns(2)
+    g3.markdown('<div class="card"><h4>Financial data</h4><span class="chip">Credit/debit card</span><span class="chip">Bank account</span><span class="chip">IFSC</span><span class="chip">UPI ID</span></div>', unsafe_allow_html=True)
+    g4.markdown('<div class="card"><h4>Credentials and network</h4><span class="chip">Passwords</span><span class="chip">API keys</span><span class="chip">IP address</span></div>', unsafe_allow_html=True)
+    head("FAQ", "Common questions")
+    with st.expander("Are my documents stored?"):
+        st.write("No. Text is processed in memory for your current session only.")
+    with st.expander("How are card numbers verified?"):
+        st.write("Candidates are checked with the Luhn algorithm, so random long numbers are not flagged as cards.")
+    with st.expander("Which files can I upload?"):
+        st.write("TXT, CSV, MD, PDF and DOCX.")
 
-if st.button("Scan document") and text.strip():
-    f = scan(text); s, l = risk(f)
-    add_block(st.session_state.chain, doc_name, f, s)
-    st.session_state.last = (doc_name, text)
-
-# ---------- Results ----------
-if st.session_state.last:
-    name, txt = st.session_state.last
-    findings = scan(txt); score, level = risk(findings)
-    st.markdown('<div class="tag">Results</div><h2 class="sec">What we found</h2>', unsafe_allow_html=True)
-    c1, c2, c3 = st.columns([1.3, 1, 1])
-    c1.markdown(f'<div class="dark"><div class="muted">Risk score for {html.escape(name)}</div>'
-                f'<div class="big">{score}</div><div class="lvl" style="color:#ff7a57">{level} risk</div></div>', unsafe_allow_html=True)
-    c2.markdown(f'<div class="card"><div class="muted">Items detected</div><div class="stat">{len(findings)}</div></div>', unsafe_allow_html=True)
-    cats = len({f.category for f in findings})
-    c3.markdown(f'<div class="card"><div class="muted">Categories affected</div><div class="stat">{cats}</div></div>', unsafe_allow_html=True)
-
-    if not findings:
-        st.success("No sensitive information detected in this document.")
+# ---------------- ANALYZE ----------------
+with t_an:
+    head("Analyze", "Find sensitive information")
+    st.radio("Source", ["Demo document", "Paste text", "Upload file"], horizontal=True, key="src")
+    name, text = "", ""
+    if ss.src == "Demo document":
+        st.selectbox("Choose a demo document", list(DEMO_DOCS), key="demo_pick")
+        name, text = ss.demo_pick, DEMO_DOCS[ss.demo_pick]
+    elif ss.src == "Paste text":
+        name = "Pasted text"
+        text = st.text_area("Paste your text", height=200, placeholder="Paste text with emails, phone numbers, Aadhaar, PAN, card numbers...")
+    else:
+        up = st.file_uploader("Upload a .txt, .csv, .pdf or .docx file", type=["txt", "csv", "md", "pdf", "docx"])
+        if up:
+            n = up.name.lower()
+            if n.endswith(".pdf"):
+                from pypdf import PdfReader
+                text = "\n".join(p.extract_text() or "" for p in PdfReader(up).pages)
+            elif n.endswith(".docx"):
+                from docx import Document
+                text = "\n".join(p.text for p in Document(up).paragraphs)
+            else:
+                text = up.read().decode("utf-8", errors="ignore")
+            name = up.name
+    ss.doc = (name, text)
+    found = scan(text) if text.strip() else []
+    if not text.strip():
+        st.markdown('<div class="card muted">Add a document above to see highlighted results here.</div>', unsafe_allow_html=True)
     else:
         st.write("")
-        # highlighted document
-        parts, last = [], 0
-        for f in findings:
-            parts.append(html.escape(txt[last:f.start]))
-            parts.append(f"<mark>{html.escape(f.value)}<small>{f.type}</small></mark>")
-            last = f.end
-        parts.append(html.escape(txt[last:]))
-        st.markdown('<div class="docview">' + "".join(parts) + "</div>", unsafe_allow_html=True)
-
+        cats = {}
+        for f in found: cats[f.category] = cats.get(f.category, 0) + 1
+        c1, c2 = st.columns([1, 2])
+        c1.markdown(f'<div class="dark"><div class="muted">Sensitive items in {html.escape(name)}</div><div class="big">{len(found)}</div><div class="muted">across {len(cats)} categories</div></div>', unsafe_allow_html=True)
+        mx = max(cats.values()) if cats else 1
+        bars = "".join(f'<div>{k} <span class="muted">({v})</span></div><div class="bar" style="width:{v/mx*100:.0f}%;background:{COL[k][1] if k!="Credentials" else "#16161a"}"></div>' for k, v in cats.items())
+        c2.markdown(f'<div class="card"><h4>By category</h4>{bars or "<span class=muted>Nothing detected.</span>"}</div>', unsafe_allow_html=True)
         st.write("")
-        df = pd.DataFrame([{"Type": f.type, "Category": f.category, "Severity": ["", "Low", "Medium", "High", "Critical"][f.severity],
-                            "Found": f.value, "Masked": redact(f.value, [type(f)(f.type, f.category, f.severity, f.value, 0, len(f.value))], mode)}
-                           for f in findings])
-        a, b = st.columns([1.4, 1])
-        a.dataframe(df, use_container_width=True, hide_index=True)
-        b.bar_chart(df["Category"].value_counts(), color="#ff4a1c")
+        st.markdown(highlight(text, found), unsafe_allow_html=True)
+        if found:
+            st.write("")
+            rows = "".join(f'<tr><td>{f.type}</td><td>{f.category}</td><td>{html.escape(f.value)}</td><td>{html.escape(mask_value(f))}</td></tr>' for f in found)
+            st.markdown(f'<table class="t"><tr><th>Type</th><th>Category</th><th>Detected</th><th>Masked as</th></tr>{rows}</table>', unsafe_allow_html=True)
+            st.caption("Open the Redact tab to protect this document.")
+        else:
+            st.success("No sensitive information detected. This document looks safe to share.")
 
-        st.markdown('<div class="tag">Output</div><h2 class="sec">Redacted copy</h2>', unsafe_allow_html=True)
-        red = redact(txt, findings, mode)
-        st.code(red, language=None)
-        d1, d2 = st.columns(2)
-        d1.download_button("Download redacted text", red, file_name="redacted.txt")
-        d2.download_button("Download findings (CSV)", df.drop(columns=["Found"]).to_csv(index=False), file_name="findings.csv")
+# ---------------- REDACT ----------------
+with t_red:
+    head("Redact", "Protect before sharing")
+    name, text = ss.get("doc", ("", ""))
+    found = scan(text) if text.strip() else []
+    if not found:
+        st.markdown('<div class="card muted">Nothing to redact yet. Analyze a document with sensitive data first (try a demo document).</div>', unsafe_allow_html=True)
+    else:
+        types = sorted({f.type for f in found})
+        chosen = st.multiselect("Data types to protect", types, default=types)
+        style = st.radio("Protection style", ["Partial mask (keep last 4)", "Label, e.g. [AADHAAR NUMBER]", "Black bars"], horizontal=True)
+        mode = {"P": "mask", "L": "label", "B": "block"}[style[0]]
+        sel = [f for f in found if f.type in chosen]
+        left, right = st.columns(2)
+        left.markdown("**Original**")
+        left.markdown(highlight(text, sel), unsafe_allow_html=True)
+        right.markdown("**Protected copy**")
+        red = redact(text, sel, mode)
+        right.markdown(f'<div class="docview">{html.escape(red)}</div>', unsafe_allow_html=True)
+        st.write("")
+        st.markdown(f'<div class="muted">{len(sel)} of {len(found)} items protected in {html.escape(name)}.</div>', unsafe_allow_html=True)
+        st.download_button("Download protected copy", red, file_name="protected_document.txt")
 
-# ---------- Ledger ----------
-st.markdown('<div class="tag">Audit</div><h2 class="sec">Scan ledger</h2>', unsafe_allow_html=True)
-chain = st.session_state.chain
-if not chain:
-    st.markdown('<div class="card muted">No scans yet. Scan a document and each result is added here as a hash-linked block.</div>', unsafe_allow_html=True)
-else:
-    ok = verify_chain(chain)
-    st.markdown(f'<div class="dark"><div class="lvl">Chain integrity: <span style="color:{"#5be37d" if ok else "#ff4a1c"}">{"Verified" if ok else "Tampered"}</span></div>'
-                f'<div class="muted" style="margin-bottom:14px">Each block stores the SHA-256 hash of the one before it, so edits to past records are detectable.</div>' +
-                "".join(f'<div class="block">Block {b["index"]} at {b["time"]} · {html.escape(b["document"])} · {b["findings"]} items · risk {b["risk"]}<br>'
-                        f'hash <code>{b["hash"][:32]}…</code> prev <code>{b["prev"][:12]}…</code></div>' for b in reversed(chain)) + '</div>',
-                unsafe_allow_html=True)
+# ---------------- DEMO ----------------
+with t_demo:
+    head("Demo data", "Try a sample document")
+    st.markdown('<div class="muted" style="margin-bottom:14px">All data below is synthetic. Load one, then open Analyze.</div>', unsafe_allow_html=True)
+    for n, t in DEMO_DOCS.items():
+        a, b = st.columns([3, 1])
+        a.markdown(f'<div class="card"><h4>{n}</h4><div class="muted" style="white-space:pre-wrap">{html.escape(t[:170])}...</div></div>', unsafe_allow_html=True)
+        b.button("Load in Analyze", key="ld" + n, on_click=load_demo, args=(n,))
+        if ss.get("demo_pick") == n and ss.src == "Demo document":
+            b.markdown('<div class="muted">Loaded. Open the Analyze tab.</div>', unsafe_allow_html=True)
+        st.write("")
 
-st.markdown('<div class="foot">Sensite · HackShastra 2K26 · Problem statement CB-02. Demo data is synthetic.</div>', unsafe_allow_html=True)
+st.markdown('<div class="foot">Sensite · HackShastra 2K26 · Problem statement CB-02</div>', unsafe_allow_html=True)

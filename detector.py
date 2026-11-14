@@ -68,28 +68,12 @@ def mask_value(f: Finding) -> str:
     return "".join(c if (i in keep or not c.isalnum()) else "X" for i, c in enumerate(v))
 
 def redact(text: str, findings: list[Finding], mode: str = "mask") -> str:
+    """mode: 'mask' (keep last 4), 'label' ([TYPE]) or 'block' (black bars)."""
     out, last = [], 0
-    for f in findings:
+    for f in sorted(findings, key=lambda x: x.start):
         out.append(text[last:f.start])
-        out.append(mask_value(f) if mode == "mask" else f"[{f.type.upper()}]")
+        out.append({"mask": lambda: mask_value(f), "label": lambda: f"[{f.type.upper()}]",
+                    "block": lambda: "\u2588" * len(f.value)}[mode]())
         last = f.end
     out.append(text[last:])
     return "".join(out)
-
-# ---- Tamper-evident audit ledger (hash chain, the "blockchain" part) ----
-def add_block(chain: list[dict], doc_name: str, findings: list[Finding], score: int) -> dict:
-    prev = chain[-1]["hash"] if chain else "0" * 64
-    body = {"index": len(chain), "time": time.strftime("%H:%M:%S"), "document": doc_name,
-            "findings": len(findings), "risk": score, "prev": prev}
-    body["hash"] = hashlib.sha256(json.dumps(body, sort_keys=True).encode()).hexdigest()
-    chain.append(body)
-    return body
-
-def verify_chain(chain: list[dict]) -> bool:
-    prev = "0" * 64
-    for b in chain:
-        core = {k: v for k, v in b.items() if k != "hash"}
-        if b["prev"] != prev or hashlib.sha256(json.dumps(core, sort_keys=True).encode()).hexdigest() != b["hash"]:
-            return False
-        prev = b["hash"]
-    return True
