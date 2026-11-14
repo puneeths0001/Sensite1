@@ -102,6 +102,12 @@ table.t th{text-align:left;color:#7d7d86;font-weight:400;padding:14px 18px;backg
 @keyframes bob{from{margin-top:-6px}to{margin-top:8px}}
 @media (max-width:700px){.scene{transform:scale(.68);height:210px;margin-top:18px}}
 @media (prefers-reduced-motion:reduce){.doc3d,.doc3d .hit,.doc3d .fl{animation:none !important;}.doc3d{transform:rotateX(12deg) rotateY(-20deg);}}
+html body [data-testid="stSelectbox"] [data-baseweb="select"] div,html body [data-testid="stMultiSelect"] [data-baseweb="select"]>div{background-color:#fff !important;color:#16161a !important;}
+html body [data-testid="stSelectbox"] [data-baseweb="select"]>div,html body [data-testid="stMultiSelect"] [data-baseweb="select"]>div{border:1px solid #dcdce0 !important;border-radius:16px !important;}
+html body [data-testid="stSelectbox"] [data-baseweb="select"] svg{fill:#16161a !important;color:#16161a !important;}
+html body [data-baseweb="popover"] div,html body [data-baseweb="popover"] ul,html body [data-baseweb="popover"] li,html body [data-baseweb="popover"] span,html body ul[role="listbox"] li,html body ul[role="listbox"] li *{background-color:#fff !important;color:#16161a !important;opacity:1 !important;}
+html body [data-baseweb="popover"] li:hover,html body [data-baseweb="popover"] li:hover *,html body li[role="option"][aria-selected="true"],html body li[role="option"][aria-selected="true"] *{background-color:#ffe9e2 !important;}
+html body [data-baseweb="popover"]>div{border-radius:16px !important;overflow:hidden;box-shadow:0 14px 36px rgba(0,0,0,.14) !important;}
 </style>
 """
 st.markdown(CSS, unsafe_allow_html=True)
