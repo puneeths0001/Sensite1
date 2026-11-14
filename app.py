@@ -36,6 +36,7 @@ button[data-baseweb="tab"][aria-selected="true"] p{color:#fff !important;}
 .stButton>button,.stDownloadButton>button{border-radius:999px;background:var(--ink) !important;border:0;padding:.6rem 1.5rem;}
 .stButton>button *,.stDownloadButton>button *{color:#fff !important;}
 .stButton>button:hover,.stDownloadButton>button:hover{background:var(--acc) !important;}
+.stApp .stButton button [data-testid="stMarkdownContainer"] p,.stApp .stDownloadButton button [data-testid="stMarkdownContainer"] p,.stApp .stButton button p,.stApp .stDownloadButton button p{color:#fff !important;}
 /* components */
 .brand{text-align:center;font-weight:600;font-size:20px;margin:4px 0 10px;} .brand i{color:var(--acc);font-style:normal;}
 .hero{border-radius:34px;padding:80px 30px 90px;text-align:center;
