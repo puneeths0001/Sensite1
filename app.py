@@ -108,6 +108,18 @@ html body [data-testid="stSelectbox"] [data-baseweb="select"] svg{fill:#16161a !
 html body [data-baseweb="popover"] div,html body [data-baseweb="popover"] ul,html body [data-baseweb="popover"] li,html body [data-baseweb="popover"] span,html body ul[role="listbox"] li,html body ul[role="listbox"] li *{background-color:#fff !important;color:#16161a !important;opacity:1 !important;}
 html body [data-baseweb="popover"] li:hover,html body [data-baseweb="popover"] li:hover *,html body li[role="option"][aria-selected="true"],html body li[role="option"][aria-selected="true"] *{background-color:#ffe9e2 !important;}
 html body [data-baseweb="popover"]>div{border-radius:16px !important;overflow:hidden;box-shadow:0 14px 36px rgba(0,0,0,.14) !important;}
+html{color-scheme:light !important;}
+html body .stApp [data-testid="stTextArea"] *,html body .stApp [data-testid="stTextInput"] *,html body .stApp [data-testid="stSelectbox"] *{background-color:#fff !important;color:#16161a !important;-webkit-text-fill-color:#16161a !important;}
+html body .stApp [data-testid="stTextArea"] textarea{border-radius:16px !important;}
+html body .stApp [data-testid="stTextArea"] [data-baseweb="textarea"],html body .stApp [data-testid="stTextArea"] [data-baseweb="base-input"]{border:1px solid #d6d6db !important;border-radius:16px !important;}
+html body .stApp [data-testid="stTextArea"] textarea::placeholder{color:#8a8a92 !important;-webkit-text-fill-color:#8a8a92 !important;}
+html body .stApp [data-testid="stTextArea"] [data-testid="InputInstructions"],html body .stApp [data-testid="stTextArea"] [data-testid="InputInstructions"] *{color:#8a8a92 !important;-webkit-text-fill-color:#8a8a92 !important;}
+html body .stApp [data-testid="stWidgetLabel"],html body .stApp [data-testid="stWidgetLabel"] *{background:transparent !important;color:#16161a !important;-webkit-text-fill-color:#16161a !important;}
+html body .stApp [data-testid="stFileUploaderDropzone"],html body .stApp [data-testid="stFileUploaderDropzone"] *{background-color:#fff !important;color:#16161a !important;-webkit-text-fill-color:#16161a !important;}
+html body .stApp [data-testid="stFileUploaderDropzone"] button{background-color:#f0f0f3 !important;border:0 !important;border-radius:999px !important;}
+html body .stApp [data-testid="stFileUploaderFile"] *{background:transparent !important;color:#16161a !important;}
+html body .stApp [data-testid="stCaptionContainer"],html body .stApp [data-testid="stCaptionContainer"] *{color:#7d7d86 !important;}
+html body .stApp [data-testid="stCheckbox"] label *,html body .stApp [data-testid="stRadio"] label *{color:#16161a !important;-webkit-text-fill-color:#16161a !important;}
 </style>
 """
 st.markdown(CSS, unsafe_allow_html=True)
