@@ -18,22 +18,21 @@ html,body,.stApp,.stApp *{font-family:'Outfit',sans-serif;}
 header[data-testid="stHeader"],footer,#MainMenu,[data-testid="stToolbar"]{display:none !important;}
 .block-container{max-width:1160px;padding-top:1rem;}
 .stApp [data-testid="stMarkdownContainer"],.stApp [data-testid="stMarkdownContainer"] p,.stApp label,.stApp label *,.stApp [data-testid="stWidgetLabel"] *{color:var(--ink) !important;}
-/* nav pill = tabs */
-.stApp [data-testid="stTabs"] [role="tablist"],.stApp [data-baseweb="tab-list"]{display:flex !important;align-items:center;justify-content:center;gap:6px;width:fit-content !important;max-width:100%;margin:6px auto 26px !important;background:#fff !important;border:0 !important;border-bottom:0 !important;border-radius:999px;padding:9px 9px 9px 26px !important;box-shadow:0 8px 28px rgba(0,0,0,.09);overflow:visible !important;}
-.stApp [data-testid="stTabs"] [role="tablist"]::before,.stApp [data-baseweb="tab-list"]::before{content:"Sensite";font-weight:600;font-size:16px;color:#16161a;margin-right:14px;}
-.stApp [data-testid="stTabs"] [role="tablist"]::after,.stApp [data-baseweb="tab-list"]::after{content:"Hackshastra 2K26";background:#16161a;color:#fff;font-size:15px;padding:12px 24px;border-radius:999px;margin-left:14px;white-space:nowrap;}
-.stApp [data-baseweb="tab-highlight"],.stApp [data-baseweb="tab-border"]{display:none !important;height:0 !important;}
-.stApp [data-testid="stTabs"],.stApp [data-testid="stTabs"]>div{border-bottom:0 !important;box-shadow:none !important;}
-.stApp button[role="tab"]{border-radius:999px;padding:9px 18px;height:auto;background:transparent !important;border:0 !important;}
-.stApp button[role="tab"] p{font-size:15px;color:#555 !important;font-weight:400;}
-.stApp button[role="tab"][aria-selected="true"]{background:#f0f0f3 !important;}
-.stApp button[role="tab"][aria-selected="true"] p{color:#16161a !important;font-weight:600;}
-.stApp [data-testid="stTabs"] [role="tablist"]{flex-wrap:nowrap !important;}
-.stApp [data-testid="stTabs"] [role="tablist"]>*:not(button){display:none !important;}
-.stApp button[role="tab"],.stApp button[role="tab"][aria-selected="true"]{box-shadow:none !important;border-bottom:0 !important;white-space:nowrap;}
-@media (max-width:820px){.stApp [data-testid="stTabs"] [role="tablist"]::before,.stApp [data-testid="stTabs"] [role="tablist"]::after{display:none !important;content:none !important;}
-.stApp [data-testid="stTabs"] [role="tablist"]{padding:8px !important;overflow-x:auto !important;justify-content:flex-start !important;}
-.stApp button[role="tab"]{padding:8px 12px;} .stApp button[role="tab"] p{font-size:14px;}}
+/* nav pill */
+.st-key-nav{max-width:780px;margin:6px auto 26px;background:#fff;border-radius:999px;padding:8px 10px 8px 28px;box-shadow:0 8px 28px rgba(0,0,0,.09);}
+.st-key-nav [data-testid="stHorizontalBlock"]{flex-wrap:nowrap !important;gap:6px !important;align-items:center;overflow-x:auto;}
+.st-key-nav [data-testid="stColumn"]{min-width:0 !important;width:auto !important;flex:1 1 auto !important;}
+.st-key-nav [data-testid="stColumn"]:first-child{flex:0 0 auto !important;}
+.st-key-nav [data-testid="stColumn"]:last-child{flex:0 0 auto !important;}
+.navbrand{font-weight:600;font-size:16px;margin-right:10px;white-space:nowrap;}
+.navbadge{background:#16161a;border-radius:999px;padding:12px 24px;font-size:15px;white-space:nowrap;margin-left:8px;}
+.navbadge,.stApp .navbadge{color:#fff !important;}
+.stApp .st-key-nav .stButton button{background:transparent !important;border:0 !important;box-shadow:none !important;padding:8px 16px;min-height:0;width:100%;}
+.stApp .st-key-nav .stButton button p{color:#555 !important;font-size:15px;font-weight:400;white-space:nowrap;}
+.stApp .st-key-nav .stButton button:hover{background:#f0f0f3 !important;}
+.stApp .st-key-nav .stButton button[kind="primary"],.stApp .st-key-nav .stButton button[data-testid="stBaseButton-primary"]{background:#f0f0f3 !important;}
+.stApp .st-key-nav .stButton button[kind="primary"] p,.stApp .st-key-nav .stButton button[data-testid="stBaseButton-primary"] p{color:#16161a !important;font-weight:600;}
+@media (max-width:700px){.navbadge{display:none}.st-key-nav{padding:8px 10px;border-radius:28px}.stApp .st-key-nav .stButton button{padding:6px 8px}.stApp .st-key-nav .stButton button p{font-size:13px}}
 /* widgets forced light */
 [data-baseweb="select"]>div,[data-baseweb="textarea"],[data-baseweb="textarea"] textarea,[data-baseweb="base-input"]{background:#fff !important;color:var(--ink) !important;border-radius:16px !important;border-color:#dcdce0 !important;}
 [data-baseweb="select"] *{color:var(--ink) !important;}
@@ -93,12 +92,21 @@ def head(tag, title):
     st.markdown(f'<div class="tag">{tag}</div><h2 class="sec">{title}</h2>', unsafe_allow_html=True)
 
 def load_demo(n):
-    ss.src, ss.demo_pick = "Demo document", n
+    ss.src, ss.demo_pick, ss.page = "Demo document", n, "Analyze"
 
-t_home, t_an, t_red, t_demo = st.tabs(["Home", "Analyze", "Redact", "Demo data"])
+PAGES = ["Home", "Analyze", "Redact", "Demo data"]
+ss.setdefault("page", "Home")
+def go(p):
+    ss.page = p
+with st.container(key="nav"):
+    cols = st.columns([1.2, 1, 1, 1, 1.3, 2.2], vertical_alignment="center")
+    cols[0].markdown('<div class="navbrand">Sensite</div>', unsafe_allow_html=True)
+    for c, p in zip(cols[1:5], PAGES):
+        c.button(p, key="nav_" + p, on_click=go, args=(p,), type="primary" if ss.page == p else "secondary")
+    cols[5].markdown('<div class="navbadge">Hackshastra 2K26</div>', unsafe_allow_html=True)
 
 # ---------------- HOME ----------------
-with t_home:
+if ss.page == "Home":
     st.markdown("""<div class="hero"><div class="pill">Sensitive information detection</div>
     <h1>Spot sensitive data.<br>Protect it before sharing.</h1>
     <p>Sensite reads your document, highlights Aadhaar, PAN, phone, email, bank and card details, then masks or redacts them in one click.</p></div>""", unsafe_allow_html=True)
@@ -124,7 +132,7 @@ with t_home:
         st.write("TXT, CSV, MD, PDF and DOCX.")
 
 # ---------------- ANALYZE ----------------
-with t_an:
+if ss.page == "Analyze":
     head("Analyze", "Find sensitive information")
     st.radio("Source", ["Demo document", "Paste text", "Upload file"], horizontal=True, key="src")
     name, text = "", ""
@@ -171,7 +179,7 @@ with t_an:
             st.success("No sensitive information detected. This document looks safe to share.")
 
 # ---------------- REDACT ----------------
-with t_red:
+if ss.page == "Redact":
     head("Redact", "Protect before sharing")
     name, text = ss.get("doc", ("", ""))
     found = scan(text) if text.strip() else []
@@ -194,15 +202,13 @@ with t_red:
         st.download_button("Download protected copy", red, file_name="protected_document.txt")
 
 # ---------------- DEMO ----------------
-with t_demo:
+if ss.page == "Demo data":
     head("Demo data", "Try a sample document")
-    st.markdown('<div class="muted" style="margin-bottom:14px">All data below is synthetic. Load one, then open Analyze.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="muted" style="margin-bottom:14px">All data below is synthetic. Load one and it opens in Analyze.</div>', unsafe_allow_html=True)
     for n, t in DEMO_DOCS.items():
         a, b = st.columns([3, 1])
         a.markdown(f'<div class="card"><h4>{n}</h4><div class="muted" style="white-space:pre-wrap">{html.escape(t[:170])}...</div></div>', unsafe_allow_html=True)
         b.button("Load in Analyze", key="ld" + n, on_click=load_demo, args=(n,))
-        if ss.get("demo_pick") == n and ss.src == "Demo document":
-            b.markdown('<div class="muted">Loaded. Open the Analyze tab.</div>', unsafe_allow_html=True)
         st.write("")
 
 st.markdown('<div class="foot">Sensite · HackShastra 2K26 · Problem statement CB-02</div>', unsafe_allow_html=True)
